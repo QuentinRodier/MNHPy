@@ -20,11 +20,22 @@ import cartopy.feature as cfeature
 
 class PanelPlot():
 
-    def __init__(self, nb_l, nb_c, Lfigsize, bigtitle, titlepad=40, minmaxpad=1.03, timepad=-0.06, lateralminmaxpad=0.86,
-                 labelcolorbarpad=6.0, colorbaraspect=20, colorbarpad=0.04, tickspad=0.8,
-                 minmaxTextSize=10, bigtitleSize=13, titleSize=12, legendSize=10,
-                 xlabelSize=11, ylabelSize=11, timeSize=11, cbTicksLabelSize=11, cbTitleSize=11, xyTicksLabelSize=10, figBoxLinewidth=1,
+    def __init__(self, nb_l, nb_c, Lfigsize, bigtitle, 
+                 titlepad=40, minmaxpad=1.03, timepad=-0.06, 
+                 lateralminmaxpad=0.86, labelcolorbarpad=6.0, 
+                 colorbaraspect=20, colorbarpad=0.04, tickspad=0.8,
+                 minmaxTextSize=10, bigtitleSize=13, titleSize=12, 
+                 legendSize=10, xlabelSize=11, ylabelSize=11, 
+                 timeSize=11, cbTicksLabelSize=11, cbTitleSize=11, 
+                 xyTicksLabelSize=10, figBoxLinewidth=1,
                  xyTicksWidth=1, xyTicksLength=6):
+        """
+        Parameters:
+            nb_l (int): Number of lines in the Panel
+            nb_c (int): Number of columns in the Panel
+            Lfigsize (list): Width and height in inches
+
+        """
 
         self.bigtitle = bigtitle  # Panel title
         self.Lfigsize = Lfigsize  # Panel size
@@ -691,9 +702,12 @@ class PanelPlot():
 
         return self.fig
 
-    def pvector(self, Lxx=[], Lyy=[], Lvar1=[], Lvar2=[], Lcarte=[], Llevel=[], Lxlab=[], Lylab=[],
-                Ltitle=[], Lwidth=[], Larrowstep=[], Lcolor=[], Llegendval=[], Llegendlabel=[],
-                Lproj=[], Lfacconv=[], ax=[], coastLines=True, Lid_overlap=[], Ltime=[], Lscale=[],
+    def pvector(self, Lxx=[], Lyy=[], Lvar1=[], Lvar2=[], 
+                Lcarte=[], Llevel=[], Lxlab=[], Lylab=[],
+                Ltitle=[], Lwidth=[], Larrowstep=[], Lcolor=[], 
+                Llegendval=[], Llegendlabel=[],
+                Lproj=[], Lfacconv=[], ax=[], coastLines=True, 
+                Lid_overlap=[], Ltime=[], Lscale=[],
                 Lylim=[], Lxlim=[]):
         """
           Vectors

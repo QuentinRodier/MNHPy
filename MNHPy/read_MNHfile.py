@@ -61,7 +61,8 @@ def read_withEPY(LnameFiles, Dvar_input, Dvar_output={}, path='.'):
     return Dvar_output
 
 
-def read_netcdf(LnameFiles, Dvar_input, path='.', get_data_only=True, del_empty_dim=True, removeHALO=True):
+def read_netcdf(LnameFiles, Dvar_input, path='.', get_data_only=True, 
+                del_empty_dim=True, removeHALO=True):
     """Read a netCDF4 Meso-NH file
     For each file, call functions to read diachronic or synchronous file
 
