@@ -82,6 +82,8 @@ class PanelPlot():
       #  Grid lines and labels
       if 'PlateCarree' in str(projo):
         gl = ax.gridlines(crs=self.projo, draw_labels=True, linewidth=1, color='gray')
+        gl.xlabel_style = {'size':self.xyTicksLabelSize}
+        gl.ylabel_style = {'size':self.xyTicksLabelSize}
         if float(cartopy.__version__[:4]) >= 0.18:
           gl.top_labels = False
           gl.right_labels = False
@@ -91,7 +93,7 @@ class PanelPlot():
         
       #  Coastlines
       if self.drawCoastLines and 'GeoAxes' in str(type(ax)):
-        ax.coastlines(resolution='10m')
+        ax.coastlines(resolution='10m',color='black', linewidth=1)
         
         #  Countries border
         ax.add_feature(cfeature.BORDERS)
@@ -219,7 +221,7 @@ class PanelPlot():
 
 
     def psectionV(self, Lxx=[], Lzz=[], Lvar=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[], 
-                 Lstep=[], Lstepticks=[], Lcolormap=[], Lcbarlabel=[], LcolorLine=[],
+                 Lstep=[], Lstepticks=[], Lcolormap=[], Lcbarlabel=[], LcolorLine=[], Lcbformatlabel=[],
                  Lfacconv=[], ax=[], Lid_overlap=[], colorbar=True, orog=[], Lxlim=[], Lylim=[], Ltime=[], Lpltype=[], LaddWhite_cm=[], LwhiteTop=[]):
       """
         Vertical cross section plot
@@ -247,6 +249,7 @@ class PanelPlot():
             - colorbar   : show colorbar or not
             - LaddWhite_cm : List of boolean to add white color to a colormap at the last bottom (low value) tick colorbar
             - LwhiteTop    : List of boolean to add the white color at the first top (high value). If false, the white is added at the bottom if Laddwhite_cm=T
+            - Lcbformatlabel: List of boolean to reduce the format to exponential 1.1E+02 format colorbar label
             - orog         : Orography variable
       """
       self.ax = ax
@@ -266,7 +269,8 @@ class PanelPlot():
       if not LaddWhite_cm: LaddWhite_cm=[False]*len(Lvar)
       if not LwhiteTop: LwhiteTop=[False]*len(Lvar)            
       if not Lylab: Lylab = ['']*len(Lvar)
-      if not Lxlab: Lxlab = ['']*len(Lvar)    
+      if not Lxlab: Lxlab = ['']*len(Lvar)
+      if not Lcbformatlabel: Lcbformatlabel=[False]*len(Lvar)
       #  Add an extra percentage of the top max value for forcing the colorbar show the true user maximum value (correct a bug)
       Lmaxval = list(map(lambda x, y: x + 1E-6*y, Lmaxval, Lstep) ) #The extra value is 1E-6 times the step ticks of the colorbar
     
@@ -351,7 +355,9 @@ class PanelPlot():
         #  Colorbar
         if colorbar:
           cb=plt.colorbar(cf, ax=self.ax[iax], fraction=0.031, pad=self.colorbarpad, ticks=np.arange(Lminval[i],Lmaxval[i],Lstepticks[i]), aspect=self.colorbaraspect)   
+          cb.ax.tick_params(labelsize=self.cbTicksLabelSize) 
           cb.ax.set_title(Lcbarlabel[i], pad=self.labelcolorbarpad, loc='left', fontsize=self.cbTitleSize) # This creates a new AxesSubplot only for the colorbar y=0 ==> location at the bottom
+          if Lcbformatlabel[i]: cb.ax.set_yticklabels(["{:.1E}".format(i) for i in cb.get_ticks()])
         
       return self.fig
 
@@ -594,7 +600,8 @@ class PanelPlot():
         
         #  Colorbar
         if colorbar:
-          cb=plt.colorbar(cf, ax=self.ax[iax], fraction=0.031, pad=self.colorbarpad, ticks=np.arange(Lminval[i],Lmaxval[i],Lstepticks[i]), aspect=self.colorbaraspect) 
+          cb=plt.colorbar(cf, ax=self.ax[iax], fraction=0.031, pad=self.colorbarpad, ticks=np.arange(Lminval[i],Lmaxval[i],Lstepticks[i]), aspect=self.colorbaraspect)
+          cb.ax.tick_params(labelsize=self.cbTicksLabelSize) 
           cb.ax.set_title(Lcbarlabel[i], pad = self.labelcolorbarpad, loc='left', fontsize=self.cbTitleSize) #This creates a new AxesSubplot only for the colorbar y=0 ==> location at the bottom
           if Lcbformatlabel[i]: cb.ax.set_yticklabels(["{:.1E}".format(i) for i in cb.get_ticks()])
         
@@ -710,7 +717,7 @@ class PanelPlot():
         if Lproj: self.draw_Backmap(coastLines, self.ax[iax], Lproj[i])
     
         # Arrow legend key
-        qk = self.ax[iax].quiverkey(cf, 1.0, -0.05, Llegendval[i], str(Llegendval[i]) + Llegendlabel[i], labelpos='E', color='black')
+        qk = self.ax[iax].quiverkey(cf, 1.0, -0.05, Llegendval[i], str(Llegendval[i]) + Llegendlabel[i], labelpos='E', color='black',fontproperties={'size':self.legendSize})
            
       return self.fig
 
