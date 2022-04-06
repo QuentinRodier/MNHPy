@@ -350,7 +350,10 @@ class PanelPlot():
  
         #Filling area under topography
         if not orog==[]:
-          self.ax[iax].fill_between(Lxx[i][0,:], orog, color='black', linewidth=0.2)
+          if Lxx[i].ndim==1:
+            self.ax[iax].fill_between(Lxx[i], orog, color='black', linewidth=0.2)
+          else:
+              self.ax[iax].fill_between(Lxx[i][0,:], orog, color='black', linewidth=0.2)
         
         #  Colorbar
         if colorbar:

@@ -296,9 +296,10 @@ def read_BACKUPfile(theFile, Dvar_input, Dvar, get_data_only, del_empty_dim=True
     Dvar['var_name']                if the group contains only one variable
     Dvar[('group_name','var_name')] if the group contains more than one variable
     """     
-    #  Reading date since beginning of the model run
-    Dvar['time'] = theFile.variables['time'][0]
-    Dvar['date'] = nc.num2date(Dvar['time'],units=theFile.variables['time'].units, calendar = theFile.variables['time'].calendar)
+    #  Reading date since beginning of the model run if theFile is a Meso-NH netCDF file
+    if 'MNH_cleanly_closed' in theFile.ncattrs():
+        Dvar['time'] = theFile.variables['time'][0]
+        Dvar['date'] = nc.num2date(Dvar['time'],units=theFile.variables['time'].units, calendar = theFile.variables['time'].calendar)
     for var in Dvar_input:
         if type(var) == tuple:
             Dvar = read_from_group(theFile, Dvar, var[0], var[1], get_data_only, del_empty_dim, removeHALO)
