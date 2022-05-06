@@ -80,17 +80,22 @@ class PanelPlot():
       self.projo = projo
       
       #  Grid lines and labels
-      if 'PlateCarree' in str(projo):
-        gl = ax.gridlines(crs=self.projo, draw_labels=True, linewidth=1, color='gray')
-        gl.xlabel_style = {'size':self.xyTicksLabelSize}
-        gl.ylabel_style = {'size':self.xyTicksLabelSize}
-        if float(cartopy.__version__[:4]) >= 0.18:
-          gl.top_labels = False
-          gl.right_labels = False
-        else:
-          gl.xlabels_top = False
-          gl.ylabels_right = False
-        
+      gl = ax.gridlines(crs=self.projo, draw_labels=True, linewidth=1, color='gray')
+      print(cartopy.__version__[:4])
+      if float(cartopy.__version__[:4]) >= 0.18:
+        gl.top_labels = False
+        gl.right_labels = False
+        gl.xlines = False
+        gl.xlocator = LongitudeLocator()
+        gl.ylocator = LatitudeLocator()
+        gl.xformatter = LongitudeFormatter()
+        gl.yformatter = LatitudeFormatter()
+      else:
+        gl.xlabels_top = False
+        gl.ylabels_right = False
+      gl.xlabel_style = {'size':self.xyTicksLabelSize, 'color': 'gray'}
+      gl.ylabel_style = {'size':self.xyTicksLabelSize, 'color': 'gray'}       
+         
       #  Coastlines
       if self.drawCoastLines and 'GeoAxes' in str(type(ax)):
         ax.coastlines(resolution='10m',color='black', linewidth=1)
