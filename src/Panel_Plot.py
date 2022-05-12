@@ -19,7 +19,7 @@ import cartopy.feature as cfeature
 
 class PanelPlot():
     
-    def __init__(self, nb_l, nb_c, Lfigsize, bigtitle, titlepad=40, minmaxpad=1.03, timepad=-0.06, lateralminmaxpad=0.86, 
+    def __init__(self, nb_l, nb_c, Lfigsize, bigtitle, bigtitlepad=0.95, titlepad=40, minmaxpad=1.03, timepad=-0.06, lateralminmaxpad=0.86, 
                  labelcolorbarpad=6.0, colorbaraspect=20, colorbarpad=0.04, tickspad=0.8,
                  minmaxTextSize=10, bigtitleSize=13, titleSize=12, legendSize=10,
                  xlabelSize=11, ylabelSize=11, timeSize=11, cbTicksLabelSize=11, cbTitleSize=11, xyTicksLabelSize=10, figBoxLinewidth=1,
@@ -31,6 +31,7 @@ class PanelPlot():
         self.nb_c = nb_c               #  Panel number of rows
         self.nb_graph = 0              #  New independent graph within the subplot
 
+        self.bigtitlepad = bigtitlepad #  Panel title vertical position
         self.titlepad = titlepad       #  Title pad (vertical shift) from graph
         self.tickspad = tickspad       #  Ticks pad (between ticks and axis label)
         self.minmaxpad = minmaxpad     #  Min/Max print pad (vertical shift)
@@ -58,7 +59,7 @@ class PanelPlot():
         #  Initialization of the panel plots
         self.fig = plt.figure(figsize=(self.Lfigsize[0],self.Lfigsize[1]))
         self.fig.set_dpi(125)
-        self.fig.suptitle(self.bigtitle,fontsize=bigtitleSize)
+        self.fig.suptitle(self.bigtitle,fontsize=self.bigtitleSize, y=self.bigtitlepad)
 
     def save_graph(self, iplt, fig, fig_name='tempgraph'):
       """
