@@ -371,7 +371,7 @@ class PanelPlot():
 
     def pXY_lines(self, Lxx=[], Lyy=[], Lxlab=[], Lylab=[], Ltitle=[], Llinetype=[], Llinewidth=[],
                  Llinecolor=[], Llinelabel=[], LfacconvX=[], LfacconvY=[], ax=[], id_overlap=None, Lxlim=[], 
-                 Lylim=[], Ltime=[], LaxisColor=[]):
+                 Lylim=[], Ltime=[], LaxisColor=[], LlocLegend=[]):
       """
         XY (multiple)-lines plot
         Parameters :
@@ -391,6 +391,8 @@ class PanelPlot():
             - ax         : List of fig.axes for ploting multiple different types of plots in a subplot panel
             - Lid_overlap: List of number index of plot to overlap current variables
             - LaxisColor : List of colors for multiple x-axis overlap
+            - LlocLegend : List of localisation of the legend : 'best',  'upper left', 'upper right', 'lower left', 'lower right',
+                           'upper center', 'lower center', 'center left', 'center right', 'center'
       """
       self.ax = ax
       firstCall = (len(self.ax) == 0)
@@ -404,6 +406,7 @@ class PanelPlot():
       if not LaxisColor: LaxisColor = ['black']*len(Lxx)
       if not Lylab: Lylab = ['']*len(Lxx)
       if not Lxlab: Lxlab = ['']*len(Lxx)
+      if not LlocLegend: LlocLegend = ['upper right']*len(Lxx)
     
       if firstCall: #  1st call
         iax = 0
@@ -428,9 +431,9 @@ class PanelPlot():
         #  Legend
         #TODO : Handling legend with overlap two axis lines in the same box. For now, placement is by hand
         if not id_overlap: 
-          self.ax[iax].legend(loc='upper right', bbox_to_anchor=(1, 0.95),fontsize=self.legendSize)
+          self.ax[iax].legend(loc=LlocLegend[i], bbox_to_anchor=(1, 0.95),fontsize=self.legendSize)
         else:
-          self.ax[iax].legend(loc='upper right', bbox_to_anchor=(1, 0.90),fontsize=self.legendSize)
+          self.ax[iax].legend(loc=LlocLegend[i], bbox_to_anchor=(1, 0.90),fontsize=self.legendSize)
 
         #  Title
         if Ltitle: self.set_Title(self.ax, iax, Ltitle[i], id_overlap,Lxlab[i], Lylab[i])
@@ -832,7 +835,7 @@ class PanelPlot():
   
     def pXY_bar(self, Lbins=[], Lvar=[], Lxlab=[], Lylab=[], Ltitle=[], Lcolor=[], Lwidth=[],
                  Llinecolor=[], Llinewidth=[], Lfacconv=[], ax=[], id_overlap=None, Lxlim=[], 
-                 Lylim=[], Ltime=[], LaxisColor=[]):
+                 Lylim=[], Ltime=[], LaxisColor=[], LlocLegend=[]):
       """
         XY Histogram
         Parameters :
@@ -852,6 +855,8 @@ class PanelPlot():
             - ax         : List of fig.axes for ploting multiple different types of plots in a subplot panel
             - Lid_overlap: List of number index of plot to overlap current variables
             - LaxisColor : List of colors for multiple x-axis overlap
+            - LlocLegend : List of localisation of the legend : 'best',  'upper left', 'upper right', 'lower left', 'lower right',
+                           'upper center', 'lower center', 'center left', 'center right', 'center'
       """
       self.ax = ax
       firstCall = (len(self.ax) == 0)
@@ -864,7 +869,8 @@ class PanelPlot():
       if not Lwidth: Lwidth = [1]*len(Lvar)
       if not Llinecolor: Llinecolor = ['black']*len(Lvar)
       if not Llinewidth: Llinewidth = [0]*len(Lvar)
-             
+      if not LlocLegend: LlocLegend = ['upper right']*len(Lvar)
+                   
       #  On all variables to plot
       for i,var in enumerate(Lvar):
         if firstCall: #  1st call
@@ -892,9 +898,9 @@ class PanelPlot():
         #  Legend
         #TODO : Handling legend with overlap two axis lines in the same box. For now, placement is by hand
         if not id_overlap: 
-          self.ax[iax].legend(loc='upper right', bbox_to_anchor=(1, 0.95))
+          self.ax[iax].legend(loc=LlocLegend[i], bbox_to_anchor=(1, 0.95))
         else:
-          self.ax[iax].legend(loc='upper right', bbox_to_anchor=(1, 0.90))
+          self.ax[iax].legend(loc=LlocLegend[i], bbox_to_anchor=(1, 0.90))
 
         #  Title
         if Ltitle: self.set_Title(self.ax, iax, Ltitle[i], id_overlap,Lxlab[i], Lylab[i])
