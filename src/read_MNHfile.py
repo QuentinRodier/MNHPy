@@ -12,11 +12,40 @@ import netCDF4 as nc
 import numpy as np
 
 def read_withEPY(LnameFiles,Dvar_input, Dvar_output={}, path='.'):
+    """Read a netCDF4 Meso-NH file, LFI, FA or GRIB 1/2 file with the Epygram Meteo-France library
+    Parameters
+    ----------
+    LnameFiles : list of str
+        list of Meso-NH netCDF4 file (diachronic or synchronous)
+        
+    Dvar_input : Dict{'keyFile' : [field_identifier]}
+    where
+    'keyFile' is a str corresponding to a key for the file number in LnameFiles (by order)
+    [field_identifier] is
+        - GRIB1      [indicatorOfParameter, paramId, indicatorOfTypeOfLevel, level, casual name] for GRIB1
+        - GRIB2      [discipline, parameterCategory, typeOfFirstFixedSurface, parameterNumber, level, casual name] for GRIB2
+        - MNH netcdf ('variable string', level) for netcdf MNH; set level=0 for 2D variables
+        - LFI        ('variable string', level) for LFI; set level=0 for 2D variables
+        - FA         'variable string'
+    
+    path : str or list
+        path(s) of the files to read
+    
+    Returns
+    -------
+    Dvar : Dict
+        Dvar[ifile]['var_name']   an epygram list of resources
+
+    """
     import epygram
     epygram.init_env()
     for i,keyFiles in enumerate(Dvar_input.keys()):
+        if type(path) is list:
+            ipath = path[i]
+        else:
+            ipath=path
         print('Reading file ' + keyFiles)
-        theFile = epygram.formats.resource(LnameFiles[i],'r')
+        theFile = epygram.formats.resource(ipath + LnameFiles[i],'r')
         Dvar_output[keyFiles] = {} #initialize dic for each files 
         for var in Dvar_input[keyFiles]: #For each files
             #  Read variables
@@ -70,8 +99,8 @@ def read_netcdf(LnameFiles, Dvar_input, path='.', get_data_only=True, del_empty_
                 'f2':[('/LES_budgets/Cartesian/Not_time_averaged/Not_normalized/cart/',MEAN_TH'),('/Budgets/RI','AVEF')]
                 }
     
-    path : str
-        unique path of the files
+    path : str or list
+        path(s) of the files to read
     
     get_data_only : bool, default: True
         if True,  the function returns Dvar as masked_array (only data)
@@ -93,9 +122,13 @@ def read_netcdf(LnameFiles, Dvar_input, path='.', get_data_only=True, del_empty_
     """
     Dvar = {}
     for i,keyFiles in enumerate(Dvar_input.keys()):
+        if type(path) is list:
+            ipath = path[i]
+        else:
+            ipath=path
         print('Reading file ' + keyFiles)
-        print(path + LnameFiles[i])
-        theFile = nc.Dataset(path + LnameFiles[i],'r')
+        print(ipath + LnameFiles[i])
+        theFile = nc.Dataset(ipath + LnameFiles[i],'r')
         Dvar[keyFiles] = {}
         if '000' in LnameFiles[i][-6:-3]: 
             if theFile['MASDEV'][0] <= 54:
