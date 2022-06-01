@@ -122,22 +122,14 @@ def oblique_proj(var, ni, nj, lvl, i_beg, j_beg, i_end, j_end):
 
     if var.ndim == 3:  # 3D variables to project
         for k in range(len(lvl)):
-            if nj.size > ni.size:  # RectBivariateSpline first x.y args must be in strictly ascending order
-                # Interpolation par niveau à l'ordre 1 pour éviter des valeurs négatives de champs strictement > 0
-                a = RectBivariateSpline(ni, nj, var[k, :, :].T, kx=1, ky=1)
-            else:
-                a = RectBivariateSpline(nj, ni, var[k, :, :], kx=1, ky=1)
+            a = RectBivariateSpline(nj, ni, var[k, :, :], kx=1, ky=1)
             for m in range(int(dist_seg) + 1):
                 # La fonction ev de RectBivariate retourne la valeur la plus proche du point considéré
-                out_var[k, m] = a.ev(axe_m_coord[m][0], axe_m_coord[m][1])
+                out_var[k, m] = a.ev(axe_m_coord[m][1], axe_m_coord[m][0])
     else:  # 2D variables to project
-        if nj.size > ni.size:  # RectBivariateSpline first x.y args must be in strictly ascending order
-            # Interpolation par niveau à l'ordre 1 pour éviter des valeurs négatives de champs strictement > 0
-            a = RectBivariateSpline(ni, nj, var[:, :].T, kx=1, ky=1)
-        else:
-            a = RectBivariateSpline(nj, ni, var[:, :], kx=1, ky=1)
+        a = RectBivariateSpline(nj, ni, var[:, :], kx=1, ky=1)
         for m in range(int(dist_seg) + 1):
-            out_var[m] = a.ev(axe_m_coord[m][0], axe_m_coord[m][1])
+            out_var[m] = a.ev(axe_m_coord[m][1], axe_m_coord[m][0])
 
     angle_proj = math.acos((ni[i_end] - ni[i_beg]) / axe_m[-1])
     return angle_proj, out_var, axe_m
