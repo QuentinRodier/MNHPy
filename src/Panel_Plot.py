@@ -228,7 +228,7 @@ class PanelPlot():
                              transform=self.ax[self.i].transAxes, color='black', fontsize=self.timeSize)
 
     def psectionV(self, Lxx=[], Lzz=[], Lvar=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[],
-                  Lstep=[], Lstepticks=[], Lcolormap=[], Lcbarlabel=[], LcolorLine=[], Lcbformatlabel=[],
+                  Lstep=[], Lstepticks=[], Lcolormap=[], Lcbarlabel=[], LcolorLine=[], Lcbformatlabel=[], Llinewidth=[],
                   Lfacconv=[], ax=[], Lid_overlap=[], colorbar=True, orog=[], Lxlim=[], Lylim=[], Ltime=[], Lpltype=[], LaddWhite_cm=[], LwhiteTop=[]):
         """
           Vertical cross section plot
@@ -247,6 +247,7 @@ class PanelPlot():
               - Lstep  : List of color-steps for each colorbar
               - Lstepticks : List of value of labels for each colorbar
               - Lcolormap  : List of colormap
+              - Llinewidth : List of lines thickness of contour
               - LcolorLine : List of colors for colors arg of contour (color line only)
               - Lcbarlabel : List of colorbar label legend (units)
               - Lfacconv   : List of factors for unit conversion of each variables
@@ -287,6 +288,9 @@ class PanelPlot():
             Lxlab = [''] * len(Lvar)
         if not Lcbformatlabel:
             Lcbformatlabel = [False] * len(Lvar)
+        if not Llinewidth:
+            Llinewidth = [1.0] * len(Lvar)
+
         #  Add an extra percentage of the top max value for forcing the colorbar show the true user maximum value (correct a bug)
         Lmaxval = list(map(lambda x, y: x + 1E-6 * y, Lmaxval, Lstep))  # The extra value is 1E-6 times the step ticks of the colorbar
 
@@ -328,10 +332,10 @@ class PanelPlot():
             if Lpltype[i] == 'c':  # Contour
                 if LcolorLine:
                     cf = self.ax[iax].contour(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
-                                              norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i], linewidths=0.1)
+                                              norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i], linewidths=Llinewidth[i])
                 else:
                     cf = self.ax[iax].contour(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
-                                              norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i], linewidths=0.1)
+                                              norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i], linewidths=Llinewidth[i])
             else:  # Contourf
                 cf = self.ax[iax].contourf(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
                                            norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
@@ -515,7 +519,7 @@ class PanelPlot():
 
     def psectionH(self, lon=[], lat=[], Lvar=[], Lcarte=[], Llevel=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[],
                   Lstep=[], Lstepticks=[], Lcolormap=[], LcolorLine=[], Lcbarlabel=[], Lproj=[], Lfacconv=[], coastLines=True, ax=[],
-                  Lid_overlap=[], colorbar=True, Ltime=[], LaddWhite_cm=[], LwhiteTop=[], Lpltype=[], Lcbformatlabel=[]):
+                  Lid_overlap=[], colorbar=True, Ltime=[], LaddWhite_cm=[], LwhiteTop=[], Lpltype=[], Lcbformatlabel=[], Llinewidth=[]):
         """
           Horizontal cross section plot
           Parameters :
@@ -532,6 +536,7 @@ class PanelPlot():
               - Lmaxval: List of maximum value for each colorbar
               - Lstep  : List of color-steps for each colorbar
               - Lstepticks : List of value of labels for each colorbar
+              - Llinewidth : List of lines thickness of contour
               - Lcolormap  : List of colormap
               - LcolorLine : List of colors for colors arg of contour (color line only)
               - Lcbarlabel : List of colorbar label legend (units)
@@ -574,6 +579,9 @@ class PanelPlot():
             LwhiteTop = [False] * len(Lvar)
         if not Lcbformatlabel:
             Lcbformatlabel = [False] * len(Lvar)
+        if not Llinewidth:
+            Llinewidth = [1.0] * len(Lvar)
+
         #  Add an extra percentage of the top max value for forcing the colorbar show the true user maximum value (correct a bug)
         if Lstep:
             Lmaxval = list(map(lambda x, y: x + 1E-6 * y, Lmaxval, Lstep))  # The extra value is 1E-6 times the step ticks of the colorbar
@@ -649,10 +657,10 @@ class PanelPlot():
             else:  # Cartesian coordinates
                 if Lpltype[i] == 'c':  # Contour
                     cf = self.ax[iax].contour(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour,
-                                              norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i])
+                                              norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i],linewidths=Llinewidth[i])
                 else:
                     cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour,
-                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
+                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i],linewidths=Llinewidth[i])
             #  Title
             self.set_Title(self.ax, iax, Ltitle[i], Lid_overlap, Lxlab[i], Lylab[i])
 
