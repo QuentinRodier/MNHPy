@@ -83,11 +83,12 @@ class PanelPlot():
 
         #  Grid lines and labels
         gl = ax.gridlines(crs=self.projo, draw_labels=True, linewidth=1, color='gray')
-        print(cartopy.__version__[:4])
         if float(cartopy.__version__[:4]) >= 0.18:
+            from cartopy.mpl.ticker import (LatitudeLocator, LongitudeLocator,LongitudeFormatter, LatitudeFormatter) 
             gl.top_labels = False
             gl.right_labels = False
-            gl.xlines = False
+            gl.xlines = True
+            gl.ylines = True
             gl.xlocator = LongitudeLocator()
             gl.ylocator = LatitudeLocator()
             gl.xformatter = LongitudeFormatter()
@@ -95,8 +96,8 @@ class PanelPlot():
         else:
             gl.xlabels_top = False
             gl.ylabels_right = False
-        gl.xlabel_style = {'size': self.xyTicksLabelSize, 'color': 'gray'}
-        gl.ylabel_style = {'size': self.xyTicksLabelSize, 'color': 'gray'}
+        gl.xlabel_style = {'size': self.xyTicksLabelSize, 'color': 'black'}
+        gl.ylabel_style = {'size': self.xyTicksLabelSize, 'color': 'black'}
 
         #  Coastlines
         if self.drawCoastLines and 'GeoAxes' in str(type(ax)):
