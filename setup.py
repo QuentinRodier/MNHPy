@@ -7,8 +7,9 @@ AUTHORS = 'Quentin Rodier & Meso-NH Team'
 
 setup(
    name='MNHPy',
-   version='0.1.0',
+   version='0.2.0',
    description=('Python visulization tools for MesoNH atmospheric research model'),
+   long_description=('Compatible with Meso-NH model version 5.5.1'),
    author=AUTHORS,
    author_email=MAINTAINER_EMAIL,
    url='https://github.com/QuentinRodier/MNHPy',
