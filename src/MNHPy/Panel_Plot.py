@@ -648,10 +648,10 @@ class PanelPlot():
                 if Lpltype[i] == 'c':  # Contour
                     if LcolorLine:
                         cf = self.ax[iax].contour(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
-                                                  norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i])
+                                                  norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i],linewidths=Llinewidth[i])
                     else:
                         cf = self.ax[iax].contour(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
-                                                  norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
+                                                  norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i],linewidths=Llinewidth[i])
                 else:
                     cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
                                                norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
@@ -661,7 +661,7 @@ class PanelPlot():
                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i],linewidths=Llinewidth[i])
                 else:
                     cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour,
-                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i],linewidths=Llinewidth[i])
+                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
             #  Title
             self.set_Title(self.ax, iax, Ltitle[i], Lid_overlap, Lxlab[i], Lylab[i])
 
