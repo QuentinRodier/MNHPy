@@ -793,12 +793,14 @@ class PanelPlot():
             axeX = Lxx[i]
             axeY = Lyy[i]
             if Lxx[i].ndim == 2:
-                cf = self.ax[iax].quiver(axeX[::Larrowstep[i], ::Larrowstep[i]], axeY[::Larrowstep[i], ::Larrowstep[i]],
-                                         vartoPlot1[::Larrowstep[i], ::Larrowstep[i]], vartoPlot2[::Larrowstep[i], ::Larrowstep[i]],
+                print('yooo')
+                cf = self.ax[iax].quiver(axeX[::Larrowstep2[i], ::Larrowstep[i]], axeY[::Larrowstep2[i], ::Larrowstep[i]],
+                                         vartoPlot1[::Larrowstep[i], ::Larrowstep2[i]], vartoPlot2[::Larrowstep[i], ::Larrowstep2[i]],
                                          width=Lwidth[i], angles='uv', color=Lcolor[i], scale=Lscale[i])
             else:
-                cf = self.ax[iax].quiver(axeX[::Larrowstep[i]], axeY[::Larrowstep[i]],
-                                         vartoPlot1[::Larrowstep[i], ::Larrowstep[i]], vartoPlot2[::Larrowstep[i], ::Larrowstep[i]],
+                print('yaaa')
+                cf = self.ax[iax].quiver(axeX[::Larrowstep2[i]], axeY[::Larrowstep[i]],
+                                         vartoPlot1[::Larrowstep[i], ::Larrowstep2[i]], vartoPlot2[::Larrowstep[i], ::Larrowstep2[i]],
                                          width=Lwidth[i], angles='uv', color=Lcolor[i], scale=Lscale[i])
             #  Title
             self.set_Title(self.ax, iax, Ltitle[i], Lid_overlap, Lxlab[i], Lylab[i])
