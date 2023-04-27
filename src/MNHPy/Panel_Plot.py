@@ -691,6 +691,7 @@ class PanelPlot():
             if colorbar:
                 cb = plt.colorbar(
                     cf,
+                    extend='both', 
                     ax=self.ax[iax],
                     fraction=0.031,
                     pad=self.colorbarpad,
