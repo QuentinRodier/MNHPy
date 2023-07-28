@@ -213,9 +213,12 @@ def comp_altitude2DVar(oneVar3D, orography, ztop, level, n_y, n_x):
     n_x3D = copy.deepcopy(oneVar3D)
     n_y3D = copy.deepcopy(oneVar3D)
     altitude = copy.deepcopy(oneVar3D)
+    
     for i in range(len(level)):
-        n_y3D[i, :] = n_y
-        n_x3D[i, :] = n_x
+        for j in range (len(n_x)):
+            n_y3D[i, :, j] = n_y
+        for j in range(len(n_y)):
+            n_x3D[i, j] = n_x
     for i in range(oneVar3D.shape[2]):
         for j in range(oneVar3D.shape[1]):
             if ztop == 0:

@@ -228,9 +228,9 @@ class PanelPlot():
         self.ax[self.i].text(0.0, self.timepad, strtext, verticalalignment='top', horizontalalignment='left',
                              transform=self.ax[self.i].transAxes, color='black', fontsize=self.timeSize)
 
-    def psectionV(self, Lxx=[], Lzz=[], Lvar=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[],
+        def psectionV(self, Lxx=[], Lzz=[], Lvar=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[],
                   Lstep=[], Lstepticks=[], Lcolormap=[], Lcbarlabel=[], LcolorLine=[], Lcbformatlabel=[], Llinewidth=[],
-                  Lfacconv=[], ax=[], Lid_overlap=[], colorbar=True, orog=[], Lxlim=[], Lylim=[], Ltime=[], Lpltype=[], LaddWhite_cm=[], LwhiteTop=[]):
+                  Lfacconv=[], ax=[], Lid_overlap=[], colorbar=True, orog=[], Lxlim=[], Lylim=[], Ltime=[], Lpltype=[], LaddWhite_cm=[], LwhiteTop=[], Lextendcolorbar=[]):
         """
           Vertical cross section plot
           Parameters :
@@ -260,6 +260,7 @@ class PanelPlot():
               - LwhiteTop    : List of boolean to add the white color at the first top (high value). If false, the white is added at the bottom if Laddwhite_cm=T
               - Lcbformatlabel: List of boolean to reduce the format to exponential 1.1E+02 format colorbar label
               - orog         : Orography variable
+              - Lextendcolorbar : List of boolean to extend the colorbar in both directions
         """
         self.ax = ax
         firstCall = (len(self.ax) == 0)
@@ -291,6 +292,8 @@ class PanelPlot():
             Lcbformatlabel = [False] * len(Lvar)
         if not Llinewidth:
             Llinewidth = [1.0] * len(Lvar)
+        if not Lextendcolorbar: 
+            Lextendcolorbar = [False] * len(Lvar)
 
         #  Add an extra percentage of the top max value for forcing the colorbar show the true user maximum value (correct a bug)
         Lmaxval = list(map(lambda x, y: x + 1E-6 * y, Lmaxval, Lstep))  # The extra value is 1E-6 times the step ticks of the colorbar
@@ -331,6 +334,7 @@ class PanelPlot():
 
             #  Plot
             if Lpltype[i] == 'c':  # Contour
+                print('contour simple')
                 if LcolorLine:
                     cf = self.ax[iax].contour(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i], linewidths=Llinewidth[i])
@@ -338,9 +342,13 @@ class PanelPlot():
                     cf = self.ax[iax].contour(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i], linewidths=Llinewidth[i])
             else:  # Contourf
-                cf = self.ax[iax].contourf(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
+                if Lextendcolorbar[i]: 
+                    cf = self.ax[iax].contourf(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
+                                           norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i], extend='both')
+                else: 
+                    cf = self.ax[iax].contourf(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
                                            norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
-
+                        
             #  Title
             self.set_Title(self.ax, iax, Ltitle[i], Lid_overlap, Lxlab[i], Lylab[i])
 
@@ -520,7 +528,7 @@ class PanelPlot():
 
     def psectionH(self, lon=[], lat=[], Lvar=[], Lcarte=[], Llevel=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[],
                   Lstep=[], Lstepticks=[], Lcolormap=[], LcolorLine=[], Lcbarlabel=[], Lproj=[], Lfacconv=[], coastLines=True, ax=[],
-                  Lid_overlap=[], colorbar=True, Ltime=[], LaddWhite_cm=[], LwhiteTop=[], Lpltype=[], Lcbformatlabel=[], Llinewidth=[]):
+                  Lid_overlap=[], colorbar=True, Ltime=[], LaddWhite_cm=[], LwhiteTop=[], Lpltype=[], Lcbformatlabel=[], Llinewidth=[], Lextendcolorbar=[]):
         """
           Horizontal cross section plot
           Parameters :
@@ -551,6 +559,8 @@ class PanelPlot():
               - LaddWhite_cm : List of boolean to add white color to a colormap at the first (low value) tick colorbar
               - LwhiteTop    : List of boolean to add the white color at the first top (high value). If false, the white is added at the bottom if Laddwhite_cm=T
               - Lcbformatlabel: List of boolean to reduce the format to exponential 1.1E+02 format colorbar label
+              - Lextendcolorbar : List of boolean to extend the colorbar in both directions
+
         """
         self.ax = ax
         firstCall = (len(self.ax) == 0)
@@ -582,6 +592,8 @@ class PanelPlot():
             Lcbformatlabel = [False] * len(Lvar)
         if not Llinewidth:
             Llinewidth = [1.0] * len(Lvar)
+        if not Lextendcolorbar: 
+            Lextendcolorbar = [False] * len(Lvar)
 
         #  Add an extra percentage of the top max value for forcing the colorbar show the true user maximum value (correct a bug)
         if Lstep:
@@ -653,14 +665,22 @@ class PanelPlot():
                         cf = self.ax[iax].contour(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
                                                   norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i],linewidths=Llinewidth[i])
                 else:
-                    cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
+                    if Lextendcolorbar[i]: 
+                        cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
+                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i], extend='both')
+                    else: 
+                        cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
                                                norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
             else:  # Cartesian coordinates
                 if Lpltype[i] == 'c':  # Contour
-                    cf = self.ax[iax].contour(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour,
+                    cf = self.ax[iax].contour(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, extend='both',
                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i],linewidths=Llinewidth[i])
                 else:
-                    cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour,
+                    if Lextendcolorbar[i]: 
+                        cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
+                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i], extend='both')
+                    else: 
+                        cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
                                                norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
             #  Title
             self.set_Title(self.ax, iax, Ltitle[i], Lid_overlap, Lxlab[i], Lylab[i])
@@ -793,12 +813,14 @@ class PanelPlot():
             axeX = Lxx[i]
             axeY = Lyy[i]
             if Lxx[i].ndim == 2:
-                cf = self.ax[iax].quiver(axeX[::Larrowstep[i], ::Larrowstep[i]], axeY[::Larrowstep[i], ::Larrowstep[i]],
-                                         vartoPlot1[::Larrowstep[i], ::Larrowstep[i]], vartoPlot2[::Larrowstep[i], ::Larrowstep[i]],
+                print('yooo')
+                cf = self.ax[iax].quiver(axeX[::Larrowstep2[i], ::Larrowstep[i]], axeY[::Larrowstep2[i], ::Larrowstep[i]],
+                                         vartoPlot1[::Larrowstep[i], ::Larrowstep2[i]], vartoPlot2[::Larrowstep[i], ::Larrowstep2[i]],
                                          width=Lwidth[i], angles='uv', color=Lcolor[i], scale=Lscale[i])
             else:
-                cf = self.ax[iax].quiver(axeX[::Larrowstep[i]], axeY[::Larrowstep[i]],
-                                         vartoPlot1[::Larrowstep[i], ::Larrowstep[i]], vartoPlot2[::Larrowstep[i], ::Larrowstep[i]],
+                print('yaaa')
+                cf = self.ax[iax].quiver(axeX[::Larrowstep2[i]], axeY[::Larrowstep[i]],
+                                         vartoPlot1[::Larrowstep[i], ::Larrowstep2[i]], vartoPlot2[::Larrowstep[i], ::Larrowstep2[i]],
                                          width=Lwidth[i], angles='uv', color=Lcolor[i], scale=Lscale[i])
             #  Title
             self.set_Title(self.ax, iax, Ltitle[i], Lid_overlap, Lxlab[i], Lylab[i])
