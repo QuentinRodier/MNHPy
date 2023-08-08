@@ -228,7 +228,7 @@ class PanelPlot():
         self.ax[self.i].text(0.0, self.timepad, strtext, verticalalignment='top', horizontalalignment='left',
                              transform=self.ax[self.i].transAxes, color='black', fontsize=self.timeSize)
 
-        def psectionV(self, Lxx=[], Lzz=[], Lvar=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[],
+    def psectionV(self, Lxx=[], Lzz=[], Lvar=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[],
                   Lstep=[], Lstepticks=[], Lcolormap=[], Lcbarlabel=[], LcolorLine=[], Lcbformatlabel=[], Llinewidth=[],
                   Lfacconv=[], ax=[], Lid_overlap=[], colorbar=True, orog=[], Lxlim=[], Lylim=[], Ltime=[], Lpltype=[], LaddWhite_cm=[], LwhiteTop=[], Lextendcolorbar=[]):
         """
@@ -334,7 +334,6 @@ class PanelPlot():
 
             #  Plot
             if Lpltype[i] == 'c':  # Contour
-                print('contour simple')
                 if LcolorLine:
                     cf = self.ax[iax].contour(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i], linewidths=Llinewidth[i])
@@ -345,7 +344,7 @@ class PanelPlot():
                 if Lextendcolorbar[i]: 
                     cf = self.ax[iax].contourf(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
                                            norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i], extend='both')
-                else: 
+                else:
                     cf = self.ax[iax].contourf(Lxx[i], Lzz[i], var * Lfacconv[i], levels=levels_contour,
                                            norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
                         
@@ -673,14 +672,14 @@ class PanelPlot():
                                                norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
             else:  # Cartesian coordinates
                 if Lpltype[i] == 'c':  # Contour
-                    cf = self.ax[iax].contour(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, extend='both',
+                    cf = self.ax[iax].contour(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour,
                                               norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], colors=LcolorLine[i],linewidths=Llinewidth[i])
                 else:
                     if Lextendcolorbar[i]: 
-                        cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
+                        cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour,
                                                norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i], extend='both')
                     else: 
-                        cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour, transform=Lproj[i],
+                        cf = self.ax[iax].contourf(lon[i], lat[i], vartoPlot * Lfacconv[i], levels=levels_contour,
                                                norm=norm, vmin=Lminval[i], vmax=Lmaxval[i], cmap=Lcolormap[i])
             #  Title
             self.set_Title(self.ax, iax, Ltitle[i], Lid_overlap, Lxlab[i], Lylab[i])
@@ -727,7 +726,7 @@ class PanelPlot():
         return self.fig
 
     def pvector(self, Lxx=[], Lyy=[], Lvar1=[], Lvar2=[], Lcarte=[], Llevel=[], Lxlab=[], Lylab=[],
-                Ltitle=[], Lwidth=[], Larrowstep=[], Lcolor=[], Llegendval=[], Llegendlabel=[],
+                Ltitle=[], Lwidth=[], Larrowstep=[], LarrowstepX=[], LarrowstepY=[], Lcolor=[], Llegendval=[], Llegendlabel=[],
                 Lproj=[], Lfacconv=[], ax=[], coastLines=True, Lid_overlap=[], Ltime=[], Lscale=[],
                 Lylim=[], Lxlim=[]):
         """
@@ -747,7 +746,9 @@ class PanelPlot():
               - Ltime  : List of time (validity)
               - Lwidth : List of thickness of the arrows
               - Lscale : List of scale for the length of the arrows (high value <=> small length)
-              - Larrowstep : List of sub-sample (frequency) if too much arrows
+              - Larrowstep : List of sub-sample (frequency) along all if too much arrows (MNHPy 0.2 name)
+              - LarrowstepX : List of sub-sample (frequency) along X-axis
+              - LarrowstepY : List of sub-sample (frequency) along Y-axis
               - Lcolor : List of colors for the arrows (default: black)
               - Llegendval : List of value for the legend of the default arrow
               - Llegendlabel : List of labels for the legend of the default arrow
@@ -770,6 +771,9 @@ class PanelPlot():
             Lylab = [''] * len(Lvar1)
         if not Lxlab:
             Lxlab = [''] * len(Lvar1)
+        if Larrowstep:
+            LarrowstepY = Larrowstep
+            LarrowstepX = Larrowstep
         #  On all variables to plot
         for i, var1 in enumerate(Lvar1):
             if firstCall:  # 1st call
@@ -813,14 +817,12 @@ class PanelPlot():
             axeX = Lxx[i]
             axeY = Lyy[i]
             if Lxx[i].ndim == 2:
-                print('yooo')
-                cf = self.ax[iax].quiver(axeX[::Larrowstep2[i], ::Larrowstep[i]], axeY[::Larrowstep2[i], ::Larrowstep[i]],
-                                         vartoPlot1[::Larrowstep[i], ::Larrowstep2[i]], vartoPlot2[::Larrowstep[i], ::Larrowstep2[i]],
+                cf = self.ax[iax].quiver(axeX[::LarrowstepX[i], ::LarrowstepY[i]], axeY[::LarrowstepX[i], ::LarrowstepY[i]],
+                                         vartoPlot1[::LarrowstepX[i], ::LarrowstepY[i]], vartoPlot2[::LarrowstepX[i], ::LarrowstepY[i]],
                                          width=Lwidth[i], angles='uv', color=Lcolor[i], scale=Lscale[i])
             else:
-                print('yaaa')
-                cf = self.ax[iax].quiver(axeX[::Larrowstep2[i]], axeY[::Larrowstep[i]],
-                                         vartoPlot1[::Larrowstep[i], ::Larrowstep2[i]], vartoPlot2[::Larrowstep[i], ::Larrowstep2[i]],
+                cf = self.ax[iax].quiver(axeX[::LarrowstepX[i]], axeY[::LarrowstepY[i]],
+                                         vartoPlot1[::LarrowstepX[i], ::LarrowstepY[i]], vartoPlot2[::LarrowstepX[i], ::LarrowstepY[i]],
                                          width=Lwidth[i], angles='uv', color=Lcolor[i], scale=Lscale[i])
             #  Title
             self.set_Title(self.ax, iax, Ltitle[i], Lid_overlap, Lxlab[i], Lylab[i])
@@ -1018,7 +1020,6 @@ class PanelPlot():
             else:  # existing ax with no overlapping (graph appended to existing panel)
                 self.ax.append(self.fig.add_subplot(self.nb_l, self.nb_c, self.nb_graph + 1))
                 self.nb_graph += 1
-                print(len(self.ax))
                 iax = len(self.ax) - 1  # The ax index of the new coming plot is the length of the existant ax -1 for indices matter
 
             #  Print time validity
