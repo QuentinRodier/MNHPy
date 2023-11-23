@@ -386,7 +386,7 @@ class PanelPlot():
                 # fontsize=self.cbTicksLabelSize) #TODO bug, levels not recognized
 
             # Filling area under topography
-            if not orog == []:
+            if len(orog) > 0:
                 if Lxx[i].ndim == 1:
                     self.ax[iax].fill_between(Lxx[i], orog, color='black', linewidth=0.2)
                 else:
