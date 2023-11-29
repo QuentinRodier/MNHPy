@@ -122,6 +122,16 @@ class PanelPlot():
                 newcolor_map[:i, :] = whites
         newcmp = ListedColormap(newcolor_map)
         return newcmp
+    
+    def addColorcm(self, colormap_in):
+        """
+          Assign the last color of the colormap to the values out of range 
+        """
+        colormap = cm.get_cmap(colormap_in, 256)
+
+        colormap.set_under(color=colormap(1./256))
+        colormap.set_over(color=colormap(1.-1./256))
+        return(colormap)
 
     def set_Title(self, ax, i, title, Lid_overlap, xlab, ylab):
         """
@@ -334,6 +344,8 @@ class PanelPlot():
             #  Add White to colormap
             if LaddWhite_cm[i] and Lcolormap:
                 Lcolormap[i] = self.addWhitecm(Lcolormap[i], len(levels_contour), LwhiteTop[i])
+            elif not LaddWhite_cm[i] and Lcolormap:
+                Lcolormap[i] = self.addColorcm(Lcolormap[i])
 
             #  Plot
             if Lpltype[i] == 'c':  # Contour
@@ -660,6 +672,8 @@ class PanelPlot():
             #  Add White to colormap
             if LaddWhite_cm[i] and Lcolormap:
                 Lcolormap[i] = self.addWhitecm(Lcolormap[i], len(levels_contour), LwhiteTop[i])
+            elif not LaddWhite_cm[i] and Lcolormap:
+                Lcolormap[i] = self.addColorcm(Lcolormap[i])
 
             #  Plot
             if Lproj:
