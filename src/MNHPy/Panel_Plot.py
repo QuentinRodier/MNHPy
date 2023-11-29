@@ -230,7 +230,8 @@ class PanelPlot():
 
     def psectionV(self, Lxx=[], Lzz=[], Lvar=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[],
                   Lstep=[], Lstepticks=[], Lcolormap=[], Lcbarlabel=[], LcolorLine=[], Lcbformatlabel=[], Llinewidth=[],
-                  Lfacconv=[], ax=[], Lid_overlap=[], colorbar=True, orog=[], Lxlim=[], Lylim=[], Ltime=[], Lpltype=[], LaddWhite_cm=[], LwhiteTop=[], Lextendcolorbar=[]):
+                  Lfacconv=[], ax=[], Lid_overlap=[], colorbar=True, orog=[], Lxlim=[], Lylim=[], Ltime=[], Lpltype=[], LaddWhite_cm=[], LwhiteTop=[], 
+                  Lextendcolorbar=[], PrintMinMaxText=True):
         """
           Vertical cross section plot
           Parameters :
@@ -261,6 +262,7 @@ class PanelPlot():
               - Lcbformatlabel: List of boolean to reduce the format to exponential 1.1E+02 format colorbar label
               - orog         : Orography variable
               - Lextendcolorbar : List of boolean to extend the colorbar in both directions
+              - PrintMinMaxText: Boolean, True to add a min/max values of the plotted variables on top of the graph
         """
         self.ax = ax
         firstCall = (len(self.ax) == 0)
@@ -315,7 +317,8 @@ class PanelPlot():
             norm = mpl.colors.Normalize(vmax=Lmaxval[i], vmin=Lminval[i])
 
             #  Print min/max (stout and on plot)
-            self.set_minmaxText(self.ax, iax, var, Ltitle[i], Lid_overlap, Lfacconv[i])
+            if PrintMinMaxText:
+                self.set_minmaxText(self.ax, iax, var, Ltitle[i], Lid_overlap, Lfacconv[i])
 
             #  Print time validity
             if Ltime:
@@ -436,6 +439,7 @@ class PanelPlot():
               - LaxisColor : List of colors for multiple x-axis overlap
               - LlocLegend : List of localisation of the legend : 'best',  'upper left', 'upper right', 'lower left', 'lower right',
                              'upper center', 'lower center', 'center left', 'center right', 'center'
+              - PrintMinMaxText: Boolean, True to add a min/max values of the plotted variables on top of the graph
         """
         self.ax = ax
         firstCall = (len(self.ax) == 0)
@@ -527,7 +531,8 @@ class PanelPlot():
 
     def psectionH(self, lon=[], lat=[], Lvar=[], Lcarte=[], Llevel=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[],
                   Lstep=[], Lstepticks=[], Lcolormap=[], LcolorLine=[], Lcbarlabel=[], Lproj=[], Lfacconv=[], coastLines=True, ax=[],
-                  Lid_overlap=[], colorbar=True, Ltime=[], LaddWhite_cm=[], LwhiteTop=[], Lpltype=[], Lcbformatlabel=[], Llinewidth=[], Lextendcolorbar=[]):
+                  Lid_overlap=[], colorbar=True, Ltime=[], LaddWhite_cm=[], LwhiteTop=[], Lpltype=[], Lcbformatlabel=[], Llinewidth=[], 
+                  Lextendcolorbar=[], PrintMinMaxText=True):
         """
           Horizontal cross section plot
           Parameters :
@@ -559,6 +564,7 @@ class PanelPlot():
               - LwhiteTop    : List of boolean to add the white color at the first top (high value). If false, the white is added at the bottom if Laddwhite_cm=T
               - Lcbformatlabel: List of boolean to reduce the format to exponential 1.1E+02 format colorbar label
               - Lextendcolorbar : List of boolean to extend the colorbar in both directions
+              - PrintMinMaxText: Boolean, True to add a min/max values of the plotted variables on top of the graph
 
         """
         self.ax = ax
@@ -637,7 +643,8 @@ class PanelPlot():
                 vartoPlot = var[Llevel[i], :, :]
 
             #  Print min/max (stout and on plot)
-            self.set_minmaxText(self.ax, iax, vartoPlot, Ltitle[i], Lid_overlap, Lfacconv[i])
+            if PrintMinMaxText:
+                self.set_minmaxText(self.ax, iax, vartoPlot, Ltitle[i], Lid_overlap, Lfacconv[i])
 
             #  Print time validity
             if Ltime:
@@ -728,7 +735,7 @@ class PanelPlot():
     def pvector(self, Lxx=[], Lyy=[], Lvar1=[], Lvar2=[], Lcarte=[], Llevel=[], Lxlab=[], Lylab=[],
                 Ltitle=[], Lwidth=[], Larrowstep=[], LarrowstepX=[], LarrowstepY=[], Lcolor=[], Llegendval=[], Llegendlabel=[],
                 Lproj=[], Lfacconv=[], ax=[], coastLines=True, Lid_overlap=[], Ltime=[], Lscale=[],
-                Lylim=[], Lxlim=[]):
+                Lylim=[], Lxlim=[], PrintMinMaxText=True):
         """
           Vectors
           Parameters :
@@ -757,6 +764,7 @@ class PanelPlot():
               - coastLines : Boolean to plot coast lines and grid lines
               - ax         : List of fig.axes for ploting multiple different types of plots in a subplot panel
               - Lid_overlap : List of number index of plot to overlap current variables
+              - PrintMinMaxText: Boolean, True to add a min/max values of the plotted variables on top of the graph
         """
         self.ax = ax
         firstCall = (len(self.ax) == 0)
@@ -807,7 +815,8 @@ class PanelPlot():
                 vartoPlot2 = Lvar2[i][Llevel[i], :, :]
 
             #  Print min/max val to help choose colorbar steps
-            self.set_minmaxText(self.ax, iax, np.sqrt(vartoPlot1**2 + vartoPlot2**2), Ltitle[i], Lid_overlap, Lfacconv[i])
+            if PrintMinMaxText:
+                self.set_minmaxText(self.ax, iax, np.sqrt(vartoPlot1**2 + vartoPlot2**2), Ltitle[i], Lid_overlap, Lfacconv[i])
 
             #  Print time validity
             if Ltime:
@@ -854,7 +863,7 @@ class PanelPlot():
 
     def pstreamline(self, Lxx=[], Lyy=[], Lvar1=[], Lvar2=[], Lcarte=[], Llevel=[], Lxlab=[], Lylab=[], Llinewidth=[], Ldensity=[],
                     Ltitle=[], Lcolor=[], Lproj=[], Lfacconv=[], ax=[], coastLines=True, Lid_overlap=[], Ltime=[],
-                    Lylim=[], Lxlim=[]):
+                    Lylim=[], Lxlim=[], PrintMinMaxText=True):
         """
           Wind stream lines
           Parameters :
@@ -878,6 +887,7 @@ class PanelPlot():
               - coastLines : Boolean to plot coast lines and grid lines
               - ax         : List of fig.axes for ploting multiple different types of plots in a subplot panel
               - Lid_overlap : List of number index of plot to overlap current variables
+              - PrintMinMaxText: Boolean, True to add a min/max values of the plotted variables on top of the graph
         """
         self.ax = ax
         firstCall = (len(self.ax) == 0)
@@ -928,7 +938,8 @@ class PanelPlot():
                 vartoPlot2 = Lvar2[i][Llevel[i], :, :]
 
             #  Print min/max val to help choose steps
-            self.set_minmaxText(self.ax, iax, np.sqrt(vartoPlot1**2 + vartoPlot2**2), Ltitle[i], Lid_overlap, Lfacconv[i])
+            if PrintMinMaxText:
+                self.set_minmaxText(self.ax, iax, np.sqrt(vartoPlot1**2 + vartoPlot2**2), Ltitle[i], Lid_overlap, Lfacconv[i])
 
             #  Print time validity
             if Ltime:
