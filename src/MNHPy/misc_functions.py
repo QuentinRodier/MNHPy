@@ -193,10 +193,10 @@ def comp_altitude2DVar(oneVar3D, orography, ztop, level, n_y, n_x):
     level : array 1D
         1D level variable (level or level_w)
 
-    n_x : array 1D
+    n_x : array 1D (or 2D if LCARTESIAN=F)
         1D directionnal grid variable along i (ni_u, or ni_v)
 
-    n_y : array 1D
+    n_y : array 1D (or 2D if LCARTESIAN=F)
         1D directionnal grid variable along j (nj_u, or nj_v)
 
     Returns
@@ -214,10 +214,14 @@ def comp_altitude2DVar(oneVar3D, orography, ztop, level, n_y, n_x):
     n_y3D = copy.deepcopy(oneVar3D)
     altitude = copy.deepcopy(oneVar3D)
     for k in range(len(level)):
-        for j in range(oneVar3D.shape[2]):
-            n_y3D[k,:,j] = n_y
-        for i in range(oneVar3D.shape[1]):
-            n_x3D[k,i,:] = n_x
+        if n_x.ndim == 2:
+          n_y3D[k,:,:] = n_y
+          n_x3D[k,:,:] = n_x
+        else:
+            for j in range(oneVar3D.shape[2]):
+                n_y3D[k,:,j] = n_y
+            for i in range(oneVar3D.shape[1]):
+                n_x3D[k,i,:] = n_x
     for i in range(oneVar3D.shape[2]):
         for j in range(oneVar3D.shape[1]):
             if ztop == 0:
