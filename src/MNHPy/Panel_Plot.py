@@ -74,7 +74,7 @@ class PanelPlot():
         self.iplt += 1
         return self.iplt
 
-    def draw_Backmap(self, drawCoastLines, ax, projo):
+    def draw_Backmap(self, drawCoastLines, ax, projo, gridLines=True):
         """
           Handle drawing of the background plot (coastlines, departements, grid lines and labels)
         """
@@ -87,8 +87,8 @@ class PanelPlot():
             from cartopy.mpl.ticker import (LatitudeLocator, LongitudeLocator,LongitudeFormatter, LatitudeFormatter) 
             gl.top_labels = False
             gl.right_labels = False
-            gl.xlines = True
-            gl.ylines = True
+            gl.xlines = gridLines
+            gl.ylines = gridLines
             gl.xlocator = LongitudeLocator()
             gl.ylocator = LatitudeLocator()
             gl.xformatter = LongitudeFormatter()
@@ -544,7 +544,7 @@ class PanelPlot():
     def psectionH(self, lon=[], lat=[], Lvar=[], Lcarte=[], Llevel=[], Lxlab=[], Lylab=[], Ltitle=[], Lminval=[], Lmaxval=[],
                   Lstep=[], Lstepticks=[], Lcolormap=[], LcolorLine=[], Lcbarlabel=[], Lproj=[], Lfacconv=[], coastLines=True, ax=[],
                   Lid_overlap=[], colorbar=True, Ltime=[], LaddWhite_cm=[], LwhiteTop=[], Lpltype=[], Lcbformatlabel=[], Llinewidth=[], 
-                  Lextendcolorbar=[], PrintMinMaxText=True):
+                  Lextendcolorbar=[], PrintMinMaxText=True,gridLines=True):
         """
           Horizontal cross section plot
           Parameters :
@@ -577,6 +577,7 @@ class PanelPlot():
               - Lcbformatlabel: List of boolean to reduce the format to exponential 1.1E+02 format colorbar label
               - Lextendcolorbar : List of boolean to extend the colorbar in both directions
               - PrintMinMaxText: Boolean, True to add a min/max values of the plotted variables on top of the graph
+              - gridLines    : Boolean, True to add the horizontal and vertical grid lines in cartopy
 
         """
         self.ax = ax
@@ -707,7 +708,7 @@ class PanelPlot():
 
             #  Coastlines / Grid lines and labels
             if Lproj:
-                self.draw_Backmap(coastLines, self.ax[iax], Lproj[i])
+                self.draw_Backmap(coastLines, self.ax[iax], Lproj[i], gridLines)
 
             #  X/Y Axis
             self.set_XYaxislab(self.ax, iax, Lxlab[i], Lylab[i])
