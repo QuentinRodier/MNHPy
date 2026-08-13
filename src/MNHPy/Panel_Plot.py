@@ -141,9 +141,7 @@ class PanelPlot():
         """
         colormap = get_cmap(colormap_in, 256)
 
-        colormap.set_under(color=colormap(1./256))
-        colormap.set_over(color=colormap(1.-1./256))
-        return(colormap)
+        return colormap.with_extremes(under=colormap(1./256), over=colormap(1.-1./256))
 
     def set_Title(self, ax, i, title, Lid_overlap, xlab, ylab):
         """
