@@ -21,10 +21,13 @@ def get_cmap(colormap_in, lut):
     """Return colormap_in resampled to lut colors
 
     Replaces matplotlib.cm.get_cmap(name, lut), deprecated in Matplotlib 3.7
-    and scheduled for removal in 3.11. As get_cmap did, a Colormap instance is
-    returned unchanged; resampled() returns a new object, so the caller may
-    mutate it without touching the registered colormap.
+    and removed in 3.11. Both special cases of the original are kept: None
+    means the rcParams default, and a Colormap instance is returned unchanged.
+    resampled() returns a new object, so the caller may mutate it without
+    touching the registered colormap.
     """
+    if colormap_in is None:
+        colormap_in = mpl.rcParams['image.cmap']
     if isinstance(colormap_in, Colormap):
         return colormap_in
     return mpl.colormaps[colormap_in].resampled(lut)
