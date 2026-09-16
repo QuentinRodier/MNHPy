@@ -11,11 +11,26 @@ MNH_LIC for details. version 1.
 import matplotlib as mpl
 # mpl.use('Agg')
 import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.colors import ListedColormap
+from matplotlib.colors import Colormap, ListedColormap
 import numpy as np
 import cartopy
 import cartopy.feature as cfeature
+
+
+def get_cmap(colormap_in, lut):
+    """Return colormap_in resampled to lut colors
+
+    Replaces matplotlib.cm.get_cmap(name, lut), deprecated in Matplotlib 3.7
+    and removed in 3.11. Both special cases of the original are kept: None
+    means the rcParams default, and a Colormap instance is returned unchanged.
+    resampled() returns a new object, so the caller may mutate it without
+    touching the registered colormap.
+    """
+    if colormap_in is None:
+        colormap_in = mpl.rcParams['image.cmap']
+    if isinstance(colormap_in, Colormap):
+        return colormap_in
+    return mpl.colormaps[colormap_in].resampled(lut)
 
 
 class PanelPlot():
@@ -111,7 +126,7 @@ class PanelPlot():
         """
           Add a white color at the top (whiteTop=True) or bottom of the colormap w.r.t. the number of independent colors used
         """
-        color_map = cm.get_cmap(colormap_in, 256)
+        color_map = get_cmap(colormap_in, 256)
         newcolor_map = color_map(np.linspace(0, 1, 256))
         whites = np.array([1, 1, 1, 1])  # RBG code + opacity
         if whiteTop:
@@ -127,11 +142,9 @@ class PanelPlot():
         """
           Assign the last color of the colormap to the values out of range 
         """
-        colormap = cm.get_cmap(colormap_in, 256)
+        colormap = get_cmap(colormap_in, 256)
 
-        colormap.set_under(color=colormap(1./256))
-        colormap.set_over(color=colormap(1.-1./256))
-        return(colormap)
+        return colormap.with_extremes(under=colormap(1./256), over=colormap(1.-1./256))
 
     def set_Title(self, ax, i, title, Lid_overlap, xlab, ylab):
         """
