@@ -137,7 +137,19 @@ def read_netcdf(LnameFiles, Dvar_input, path='.', get_data_only=True, del_empty_
         theFile = nc.Dataset(ipath + LnameFiles[i], 'r')
         Dvar[keyFiles] = {}
         if '000' in LnameFiles[i][-6:-3]:
-            if theFile['MASDEV'][0] <= 54:
+            # Check version: try MASDEV field first, fall back to MNH_VERSION attribute
+            try:
+                masdev = int(theFile['MASDEV'][0])
+                masdev_str = str(masdev)
+                version = int(masdev_str[0])  # First digit
+                subversion = int(masdev_str[1:]) if len(masdev_str) > 1 else 0  # Remaining digits
+            except (KeyError, IndexError):
+                # MASDEV not found, use MNH_VERSION attribute (3 integers)
+                mnh_version = theFile.getncattr('MNH_VERSION')
+                version = mnh_version[0]
+                subversion = mnh_version[1]
+
+            if version < 5 or (version == 5 and subversion < 5):
                 raise TypeError('The python lib is available for MNH >= 5.5')
             else:
                 Dvar[keyFiles] = read_TIMESfiles_55(theFile, Dvar_input[keyFiles], Dvar[keyFiles], get_data_only, del_empty_dim, removeHALO)
