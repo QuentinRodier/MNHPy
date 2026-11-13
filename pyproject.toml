@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mnhpy"
+version = "0.3.4"
+description = "Python visualization tools for MesoNH atmospheric research model"
+readme = "README.md"
+requires-python = ">=3.12.3"
+license = { text = "CeCILL-C" }
+authors = [
+    { name = "Quentin Rodier & Meso-NH Team", email = "mesonhsupport@utoulouse.fr" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: CeCILL-C Free Software License Agreement (CECILL-C)",
+]
+dependencies = [
+    "numpy>=1.26.4",
+    "matplotlib>=3.10.9",
+    "cartopy>=0.21.1",
+    "scipy>=1.14.0",
+    "netCDF4>=1.7.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/QuentinRodier/MNHPy"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+packages = ["MNHPy"]

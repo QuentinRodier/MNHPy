@@ -1,3 +1,6 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
 build/
 dist/
-src/MNHPy.egg-info/
+.venv/
